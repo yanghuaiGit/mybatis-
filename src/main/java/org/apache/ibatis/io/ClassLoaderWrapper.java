@@ -25,11 +25,14 @@ import java.net.URL;
  */
 public class ClassLoaderWrapper {
 
+  //应用指定的默认类加载器
   ClassLoader defaultClassLoader;
+  //系统类加载器
   ClassLoader systemClassLoader;
 
   ClassLoaderWrapper() {
     try {
+      //初始化系统加载器
       systemClassLoader = ClassLoader.getSystemClassLoader();
     } catch (SecurityException ignored) {
       // AccessControlException on Google App Engine

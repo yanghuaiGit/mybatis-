@@ -42,10 +42,14 @@ public class BeanWrapper extends BaseWrapper {
 
   @Override
   public Object get(PropertyTokenizer prop) {
+    //存在索引信息，则表示属性表达式中的 name 部分为集合类型
     if (prop.getIndex() != null) {
+      // 通过 MetaObject.getValue （）方法获取 object 对象 中的指定集合属性
       Object collection = resolveCollection(prop, object);
+      //获取集合元素
       return getCollectionValue(prop, collection);
     } else {
+      //不存在索引信息 ，则 name 部分为普通对象，查找并调用 Invoker 相关方法获取属性
       return getBeanProperty(prop, object);
     }
   }

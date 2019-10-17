@@ -35,6 +35,11 @@ import org.apache.ibatis.session.Configuration;
  * @author Simone Tripodi
  * @author Kzuki Shimizu
  */
+
+/**
+ * 对于非空数据的处理都交给了子类完成
+ * @param <T>
+ */
 public abstract class BaseTypeHandler<T> extends TypeReference<T> implements TypeHandler<T> {
 
   /**

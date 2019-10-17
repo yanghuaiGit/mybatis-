@@ -25,10 +25,12 @@ import java.sql.SQLException;
  */
 public interface TypeHandler<T> {
 
+  //负责将数据 JdbcType 类型转换成 java类型：
   void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException;
 
   /**
    * @param columnName Colunm name, when configuration <code>useColumnLabel</code> is <code>false</code>
+   * getResult（）方法及其重载负责将数据由 Java 类型转换 JdbcType 类型。
    */
   T getResult(ResultSet rs, String columnName) throws SQLException;
 

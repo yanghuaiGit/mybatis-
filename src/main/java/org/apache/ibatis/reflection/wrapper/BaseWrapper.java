@@ -42,10 +42,20 @@ public abstract class BaseWrapper implements ObjectWrapper {
     }
   }
 
+  /**
+   * 会解析属性表达式的索引
+   * 信息，然后获取对应项
+   * @param prop
+   * @param collection
+   * @return
+   */
   protected Object getCollectionValue(PropertyTokenizer prop, Object collection) {
+
+    //如果为map类型 则index就是key
     if (collection instanceof Map) {
       return ((Map) collection).get(prop.getIndex());
     } else {
+      //如果是其他集合类型，则 index 为下标
       int i = Integer.parseInt(prop.getIndex());
       if (collection instanceof List) {
         return ((List) collection).get(i);

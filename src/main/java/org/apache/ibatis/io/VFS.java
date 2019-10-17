@@ -1,19 +1,22 @@
 /**
- *    Copyright ${license.git.copyrightYears} the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright ${license.git.copyrightYears} the original author or authors.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.io;
+
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -24,9 +27,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
-
 /**
  * Provides a very simple API for accessing resources within an application server.
  *
@@ -35,13 +35,23 @@ import org.apache.ibatis.logging.LogFactory;
 public abstract class VFS {
   private static final Log log = LogFactory.getLog(VFS.class);
 
-  /** The built-in implementations. */
-  public static final Class<?>[] IMPLEMENTATIONS = { JBoss6VFS.class, DefaultVFS.class };
+  /**
+   * The built-in implementations.
+   */
+  //记录 MyBatis提供的两个VFS 实现类
+  public static final Class<?>[] IMPLEMENTATIONS = {JBoss6VFS.class, DefaultVFS.class};
 
-  /** The list to which implementations are added by {@link #addImplClass(Class)}. */
+  /**
+   * The list to which implementations are added by {@link #addImplClass(Class)}.
+   */
+
+  //记录 用户自定义 VFS 实现类 , addimplClass）方法会将指定的 VFS 实现对应的 Class 对象添加
+  // USER IMPLEMENTATIONS 集合中
   public static final List<Class<? extends VFS>> USER_IMPLEMENTATIONS = new ArrayList<>();
 
-  /** Singleton instance holder. */
+  /**
+   * Singleton instance holder.
+   */
   private static class VFSHolder {
     static final VFS INSTANCE = createVFS();
 
@@ -54,6 +64,7 @@ public abstract class VFS {
 
       // Try each implementation class until a valid one is found
       VFS vfs = null;
+      //遍历 impls 集合，依次实例化 VFS 对象并检测 VFS 对象是否有效，一旦得到有效的 VFS 对象，则结束循环
       for (int i = 0; vfs == null || !vfs.isValid(); i++) {
         Class<? extends VFS> impl = impls.get(i);
         try {
@@ -61,7 +72,7 @@ public abstract class VFS {
           if (!vfs.isValid()) {
             if (log.isDebugEnabled()) {
               log.debug("VFS implementation " + impl.getName() +
-                  " is not valid in this environment.");
+                " is not valid in this environment.");
             }
           }
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
@@ -98,7 +109,9 @@ public abstract class VFS {
     }
   }
 
-  /** Get a class by name. If the class is not found then return null. */
+  /**
+   * Get a class by name. If the class is not found then return null.
+   */
   protected static Class<?> getClass(String className) {
     try {
       return Thread.currentThread().getContextClassLoader().loadClass(className);
@@ -114,8 +127,8 @@ public abstract class VFS {
   /**
    * Get a method by name and parameter types. If the method is not found then return null.
    *
-   * @param clazz The class to which the method belongs.
-   * @param methodName The name of the method.
+   * @param clazz          The class to which the method belongs.
+   * @param methodName     The name of the method.
    * @param parameterTypes The types of the parameters accepted by the method.
    */
   protected static Method getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
@@ -136,16 +149,16 @@ public abstract class VFS {
   /**
    * Invoke a method on an object and return whatever it returns.
    *
-   * @param method The method to invoke.
-   * @param object The instance or class (for static methods) on which to invoke the method.
+   * @param method     The method to invoke.
+   * @param object     The instance or class (for static methods) on which to invoke the method.
    * @param parameters The parameters to pass to the method.
    * @return Whatever the method returns.
-   * @throws IOException If I/O errors occur
+   * @throws IOException      If I/O errors occur
    * @throws RuntimeException If anything else goes wrong
    */
   @SuppressWarnings("unchecked")
   protected static <T> T invoke(Method method, Object object, Object... parameters)
-      throws IOException, RuntimeException {
+    throws IOException, RuntimeException {
     try {
       return (T) method.invoke(object, parameters);
     } catch (IllegalArgumentException | IllegalAccessException e) {
@@ -171,19 +184,23 @@ public abstract class VFS {
     return Collections.list(Thread.currentThread().getContextClassLoader().getResources(path));
   }
 
-  /** Return true if the {@link VFS} implementation is valid for the current environment. */
+  /**
+   * Return true if the {@link VFS} implementation is valid for the current environment.
+   */
+  //检测当前VFS是否有效
   public abstract boolean isValid();
 
   /**
    * Recursively list the full resource path of all the resources that are children of the
    * resource identified by a URL.
    *
-   * @param url The URL that identifies the resource to list.
+   * @param url     The URL that identifies the resource to list.
    * @param forPath The path to the resource that is identified by the URL. Generally, this is the
-   *            value passed to {@link #getResources(String)} to get the resource URL.
+   *                value passed to {@link #getResources(String)} to get the resource URL.
    * @return A list containing the names of the child resources.
    * @throws IOException If I/O errors occur
    */
+  //负责查找指定的资源名称列表
   protected abstract List<String> list(URL url, String forPath) throws IOException;
 
   /**

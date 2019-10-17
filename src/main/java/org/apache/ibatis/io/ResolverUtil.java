@@ -71,6 +71,7 @@ public class ResolverUtil<T> {
      * Will be called repeatedly with candidate classes. Must return True if a class
      * is to be included in the results, false otherwise.
      */
+    //参数 type 是待检测的类 ，如果该类符合检测的条件，则 matches （）方法返回 true ，否则返回 false
     boolean matches(Class<?> type);
   }
 
@@ -78,6 +79,7 @@ public class ResolverUtil<T> {
    * A Test that checks to see if each class is assignable to the provided class. Note
    * that this test will match the parent type itself if it is presented for matching.
    */
+  //用于检测指定类是否继承了 parent 指定的类
   public static class IsA implements Test {
     private Class<?> parent;
 

@@ -40,15 +40,26 @@ import org.apache.ibatis.reflection.ArrayUtil;
  */
 public abstract class BaseJdbcLogger {
 
+  //记录绑定 SQL 参数相关 set*（） 方法名称
   protected static final Set<String> SET_METHODS;
+
+  //以及执行 SQL 语句相关的方法名称，
   protected static final Set<String> EXECUTE_METHODS = new HashSet<>();
 
+  //记录了 PreparedStatement.set*（）方法设置键值对
   private final Map<Object, Object> columnMap = new HashMap<>();
 
+
+  //记录了 PreparedStatement set*（）方法设置的 key值
   private final List<Object> columnNames = new ArrayList<>();
+
+
+  //记录了 PreparedStatement set*（）方法设置 value值
   private final List<Object> columnValues = new ArrayList<>();
 
+  //输出日志的LOG对象
   protected final Log statementLog;
+  //记录了SQL的层数，用于输出SQL
   protected final int queryStack;
 
   /*

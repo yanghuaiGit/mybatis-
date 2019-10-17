@@ -44,7 +44,7 @@ public class Reflector {
    */
   private final String[] writablePropertyNames;
   /**
-   *记录了属性相应 setter 方法 key 是属性名称， value Invoker 对象，它是对 setter 方法对应 Method 对象的封装
+   * 记录了属性相应 setter 方法 key 是属性名称， value Invoker 对象，它是对 setter 方法对应 Method 对象的封装
    */
   private final Map<String, Invoker> setMethods = new HashMap<>();
   /**
@@ -269,6 +269,8 @@ public class Reflector {
     return result;
   }
 
+  // 当宇段没有对应 getter setter 方法时会添加相应的
+  // GetFieldlnvoker SetFieldlnvoker 对象
   private void addFields(Class<?> clazz) {
     //获取 clazz 中定义的全部字段
     Field[] fields = clazz.getDeclaredFields();
