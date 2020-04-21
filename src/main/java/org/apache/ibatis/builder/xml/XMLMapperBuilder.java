@@ -93,11 +93,13 @@ public class XMLMapperBuilder extends BaseBuilder {
     if (!configuration.isResourceLoaded(resource)) {
       configurationElement(parser.evalNode("/mapper"));
       configuration.addLoadedResource(resource);
+      //解析mapper文件
       bindMapperForNamespace();
     }
 
     parsePendingResultMaps();
     parsePendingCacheRefs();
+    //处理SQL的逻辑
     parsePendingStatements();
   }
 

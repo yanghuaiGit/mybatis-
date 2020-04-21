@@ -135,6 +135,7 @@ public class MapperAnnotationBuilder {
       for (Method method : methods) {
         try {
           // issue #237
+          //通过反射处理注解
           if (!method.isBridge()) {
             parseStatement(method);
           }
@@ -299,6 +300,7 @@ public class MapperAnnotationBuilder {
   void parseStatement(Method method) {
     Class<?> parameterTypeClass = getParameterType(method);
     LanguageDriver languageDriver = getLanguageDriver(method);
+    //获取sqlsource  sql语句最终被分装为sqlsource
     SqlSource sqlSource = getSqlSourceFromAnnotations(method, parameterTypeClass, languageDriver);
     if (sqlSource != null) {
       Options options = method.getAnnotation(Options.class);
@@ -355,6 +357,7 @@ public class MapperAnnotationBuilder {
         resultMapId = parseResultMap(method);
       }
 
+      //最终还是和 xml解析一样 通过MapperBuilderAssistant来构建MappedStatement
       assistant.addMappedStatement(
           mappedStatementId,
           sqlSource,

@@ -151,7 +151,7 @@ public class PooledDataSource implements DataSource {
 
   /**
    * Sets the default network timeout value to wait for the database operation to complete. See {@link Connection#setNetworkTimeout(java.util.concurrent.Executor, int)}
-   * 
+   *
    * @param milliseconds
    *          The time in milliseconds to wait for the database operation to complete.
    * @since 3.5.2
@@ -365,13 +365,18 @@ public class PooledDataSource implements DataSource {
   protected void pushConnection(PooledConnection conn) throws SQLException {
 
     synchronized (state) {
+      //移出掉这个连接
       state.activeConnections.remove(conn);
+      //是否有效
       if (conn.isValid()) {
+        //如果空闲连接小于最大连接数
         if (state.idleConnections.size() < poolMaximumIdleConnections && conn.getConnectionTypeCode() == expectedConnectionTypeCode) {
           state.accumulatedCheckoutTime += conn.getCheckoutTime();
           if (!conn.getRealConnection().getAutoCommit()) {
+            //不是自动提交事务的  需要提交事务
             conn.getRealConnection().rollback();
           }
+          //对原有的代理对象持有的真实连接 重新包装一个代理类 放入池中
           PooledConnection newConn = new PooledConnection(conn.getRealConnection(), this);
           state.idleConnections.add(newConn);
           newConn.setCreatedTimestamp(conn.getCreatedTimestamp());
@@ -382,6 +387,7 @@ public class PooledDataSource implements DataSource {
           }
           state.notifyAll();
         } else {
+          //如果数据库连接池已经满了 就直接关闭即可
           state.accumulatedCheckoutTime += conn.getCheckoutTime();
           if (!conn.getRealConnection().getAutoCommit()) {
             conn.getRealConnection().rollback();
