@@ -609,9 +609,11 @@ public class Configuration {
     } else {
       executor = new SimpleExecutor(this, transaction);
     }
+    //这儿是装饰者模式 增加缓存 使用CachingExecutor包装了executor 以此实现了二级缓存
     if (cacheEnabled) {
       executor = new CachingExecutor(executor);
     }
+    //这儿是mybatis插件注入的地方
     executor = (Executor) interceptorChain.pluginAll(executor);
     return executor;
   }
