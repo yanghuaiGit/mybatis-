@@ -251,6 +251,7 @@ public class MapperMethod {
       return type;
     }
 
+    //根据接口名字加上方法名字去configuration拿对应的mappedStatement
     private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
         Class<?> declaringClass, Configuration configuration) {
       String statementId = mapperInterface.getName() + "." + methodName;
