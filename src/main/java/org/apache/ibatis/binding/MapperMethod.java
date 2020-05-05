@@ -73,16 +73,21 @@ public class MapperMethod {
         break;
       }
       case SELECT:
+        //无返回值
         if (method.returnsVoid() && method.hasResultHandler()) {
           executeWithResultHandler(sqlSession, args);
           result = null;
+          //返回结合类型
         } else if (method.returnsMany()) {
           result = executeForMany(sqlSession, args);
+          //返回Map类型
         } else if (method.returnsMap()) {
           result = executeForMap(sqlSession, args);
         } else if (method.returnsCursor()) {
           result = executeForCursor(sqlSession, args);
         } else {
+          //将参数转为SQL命令的参数 默认会添加一个param+参数索引的参数名
+          ////{password=123456, id=501441819331002368, param1=501441819331002368, param2=123456}
           Object param = method.convertArgsToSqlCommandParam(args);
           result = sqlSession.selectOne(command.getName(), param);
           if (method.returnsOptional()

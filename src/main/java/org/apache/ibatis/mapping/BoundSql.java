@@ -35,8 +35,11 @@ import org.apache.ibatis.session.Configuration;
  */
 public class BoundSql {
 
+  //动态生成的SQL,解析完毕带有占位性的SQL
   private final String sql;
+  //每个参数的信息。比如参数名称、输入/输出类型、对应的JDBC类型等
   private final List<ParameterMapping> parameterMappings;
+  //参数
   private final Object parameterObject;
   private final Map<String, Object> additionalParameters;
   private final MetaObject metaParameters;

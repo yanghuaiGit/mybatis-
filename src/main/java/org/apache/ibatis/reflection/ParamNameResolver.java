@@ -112,6 +112,7 @@ public class ParamNameResolver {
     if (args == null || paramCount == 0) {
       return null;
     } else if (!hasParamAnnotation && paramCount == 1) {
+      //如果没有参数注解 且参数个数是1 则直接返回第一个参数值
       return args[names.firstKey()];
     } else {
       final Map<String, Object> param = new ParamMap<>();
@@ -122,6 +123,7 @@ public class ParamNameResolver {
         final String genericParamName = GENERIC_NAME_PREFIX + String.valueOf(i + 1);
         // ensure not to overwrite parameter named with @Param
         if (!names.containsValue(genericParamName)) {
+          //同时使用param1 param2 形式存储kv
           param.put(genericParamName, args[entry.getKey()]);
         }
         i++;
